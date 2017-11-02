@@ -31,7 +31,7 @@ DEFAULTCONF=x86_64-w64-mingw32
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=x86_64-w64-mingw32 x86_64-w64-mingw64 aarch64-linux-android archlinux64-gcc 
+ALLCONFS=x86_64-w64-mingw32 x86_64-w64-mingw32_shared aarch64-linux-android archlinux64-gcc 
 
 
 # build

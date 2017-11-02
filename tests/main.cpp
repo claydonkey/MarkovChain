@@ -28,140 +28,129 @@
  *
  * Created on 27 April 2016, 13:29
  */
+#include <stdint.h>
 
-#include<iostream>
-#include<cstdlib>
+#include <assert.h>
+#include <iostream>
+#include <cstdlib>
 #include <vector>
 #include <cmath>
-#include <stdint.h>
 #include <complex>
-#include "MarkovMx.h"
-#include "MarkovEigen.h"
 #include <limits>
 #include <chrono>
 #include <functional>
-#include "assert.h"
-#include <Eigen/Dense>
-//#include <unsupported/Eigen/MatrixFunctions>
 
-#define TEST_ITERATIONS 1000
-#define USEEIGEN2
-#define STREAKSq
+#include <Eigen/Dense>
+#include "MarkovMx.h"
+#include "MarkovEigen.h"
+#include "MarkovStats.h"
+
+#define TEST_ITERATIONS 10000
+#define USE_TIMERNOT
 
 using namespace std;
 using namespace Eigen;
 
-chrono::microseconds::rep execution(std::function<void() > func) {
+chrono::microseconds::rep Timer(std::function<void() > func) {
+#ifdef USE_TIMER
   auto start = chrono::system_clock::now();
   for (int times = 0; times < TEST_ITERATIONS; times++) {
 	func();
   }
-
-
   chrono::microseconds duration = chrono::duration_cast<chrono::microseconds>(std::chrono::system_clock::now() - start);
   return duration.count();
+#endif
 }
 
 int main(int argc, char** argv) {
   std::cin.sync_with_stdio(false);
   int k;
-  unsigned long long int n;
+  uint64_t n;
   double s;
   int puz;
+  int k1;
 
-  Affine3f transform(Translation3f(0.0f, -0.75f, 0.0f));
-  cout << transform.matrix() << std::endl;
-
-
-  cout << "Enter Problem to Solve:\n 1. Coupon Collector\n 2. Streaks\n";
+  cout <<
+		  "Enter Problem to Solve:\n 1. Coupon Collector\n 2. Streaks\n";
   cin >> puz;
 
 
-  cout << "Max Power: " << numeric_limits<unsigned long long int>::max() << endl;
-  cout << "Enter the number of trials:\n";
-  cin >> n;
 
-
-  int k1;
   switch (puz) {
 	case 2:
-	  cout << "Enter the length of streak desired:\n";
+	  cout <<
+			  "Enter the length of streak desired: ";
 	  k1 = [](int t) {
 		return cin >> t, std::move(t + 1);
 	  }({});
-	  cout << "Enter the probability of single success:\n";
+	  cout <<
+			  "Enter the probability of a single success: ";
 	  cin >> s;
 	  break;
 	case 1:
-	  cout << "Enter the number of Different Coupons to Collect:\n";
-
+	  cout <<
+			  "Enter the number of different coupons in full set: ";
 	  k1 = [](int t) {
 		return cin >> t, std::move(t);
 	  }({});
 	  break;
   }
 
-#if defined USEEIGEN
-  Eigen::MatrixXd marMat(k1, k1);
-  Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
+  cout <<
+		  "Enter the number of trials: ";
+  cin >> n;
 
-  for (int i = 0; i < k1; i++)
-	for (int j = 0; j < k1; j++) {
-	  marMat(i, j) = ((i == j + 1) ? s : 0.0);
-	  if (i == 0)
-		marMat(0, j) = 1.0 - s;
-	}
-  marMat(k1 - 1, k1 - 1) = 1.0;
-  marMat(0, k1 - 1) = 0.0;
-  //   cout << marMat.format(CleanFmt);
-  //       cout << execution([&]() {
-  marMat = marMat.pow(n);
-  //    }) << std::endl;
-  //  cout << marMat.format(CleanFmt);
-  printf("\nprobability (Eigen) %lf: \n", marMat(k1 - 1, 0));
+  cout << endl << endl;
 
-#elif defined USEEIGEN2
+  Markov::MarkovMx <double> *mkv;
+
+  switch (puz) {
+	case 1:
+	  mkv = new Markov::Coupon<double> (k1);
+	  cout << *mkv << endl;
+	  // cout << Timer([&]() {
+	  *mkv = *mkv ^ (n - 1);
+	  // }) << std::endl;
+	  break;
+	case 2:
+	  mkv = new Markov::Streak<double> (k1, s);
+	  // cout << Timer([&]() {
+	  *mkv = *mkv ^ n;
+	  //  }) << std::endl;
+	  break;
+  }
+  cout << *mkv << endl;
+
+  printf("\nprobability (std) %lf: \n\n",
+		  mkv->markov_matrix_.get()[mkv->kSize * (k1 - 1)]);
+
+  fflush(stdout);
+  free(mkv);
+
   MarkovEigen mkv2(k1);
 
   switch (puz) {
 	case 1:
 	  mkv2.initCouponCollector();
-	  cout << mkv2.marMat.format(mkv2.CleanFmt) << endl;
+	  cout << mkv2.marMat.format(mkv2.CleanFmt) << endl << endl;
+	  //  cout << Timer([&]() {
 	  mkv2 = mkv2 ^ (n - 1);
+	  //  }) << std::endl;
 	  break;
 	case 2:
 	  mkv2.initStreak(s);
 	  cout << mkv2.marMat.format(mkv2.CleanFmt) << endl;
+	  //  cout << Timer([&]() {
 	  mkv2 = mkv2 ^ n;
+	  //  }) << std::endl;
 	  break;
-
   }
-
 
   cout << mkv2.marMat.format(mkv2.CleanFmt) << endl;
 
   printf("\nprobability (Eigen2) %lf: \n", mkv2.marMat(k1 - 1, 0));
   fflush(stdout);
 
-
-  //  mkv2.marMat.transposeInPlace();
-  //     MarkovMx<double>mkv( mkv2.marMat.data(), k1);
-  //      cout << mkv << endl;
-#else
-
-  double array [k1 * k1];
-  // double Markov20[] = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-  MarkovMx<double>mkv(array, k1);
-  mkv.initStreak(s);
-  // cout << execution([&]() {
-  cout << mkv << endl;
-  mkv = mkv ^ n;
-  cout << mkv << endl;
-  //}) << endl;
-
-  printf("probability %lf: \n", mkv.a[(k1 * (k1 - 1))]);
-#endif
-  // cin >> n;
   return 0;
 }
 

@@ -23,7 +23,7 @@ AS=nasm
 # Macros
 CND_PLATFORM=x86_64-w64-mingw32-Windows
 CND_DLIB_EXT=dll
-CND_CONF=x86_64-w64-mingw64
+CND_CONF=x86_64-w64-mingw32_shared
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/MarkovStats.o \
 	${OBJECTDIR}/markovEigen.o \
 	${OBJECTDIR}/markovMx.o
 
@@ -53,8 +54,8 @@ TESTOBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-march=native
-CXXFLAGS=-march=native
+CCFLAGS=-O3 -march=native
+CXXFLAGS=-O3 -march=native
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -71,7 +72,12 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libMarkovChain.${CND_DLIB_EXT}: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libMarkovChain.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared
+	x86_64-w64-mingw32-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libMarkovChain.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared
+
+${OBJECTDIR}/MarkovStats.o: MarkovStats.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MarkovStats.o MarkovStats.cpp
 
 ${OBJECTDIR}/markovEigen.o: markovEigen.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -98,8 +104,21 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/main.o ${OBJECTFILES:%.o=%_nomain.o}
 ${TESTDIR}/tests/main.o: tests/main.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -I. -std=c++14 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/main.o tests/main.cpp
+	$(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -I. -std=c++14 -O3 -march=native -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/main.o tests/main.cpp
 
+
+${OBJECTDIR}/MarkovStats_nomain.o: ${OBJECTDIR}/MarkovStats.o MarkovStats.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/MarkovStats.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MarkovStats_nomain.o MarkovStats.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/MarkovStats.o ${OBJECTDIR}/MarkovStats_nomain.o;\
+	fi
 
 ${OBJECTDIR}/markovEigen_nomain.o: ${OBJECTDIR}/markovEigen.o markovEigen.cpp 
 	${MKDIR} -p ${OBJECTDIR}

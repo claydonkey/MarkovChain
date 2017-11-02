@@ -37,39 +37,37 @@
 using namespace std;
 using namespace Eigen;
 
-MarkovEigen::MarkovEigen(const int size) : N(size), marMat(size, size), CleanFmt(4, 0, ", ", "\n", "[", "]") {
+MarkovEigen::MarkovEigen(const int size) : kSize(size), marMat(size, size), CleanFmt(4, 0, ", ", "\n", "[", "]") {
 }
 
-MarkovEigen::MarkovEigen(const int size, Eigen::MatrixXd mat) : N(size), marMat(mat), CleanFmt(4, 0, ", ", "\n", "[", "]") {
+MarkovEigen::MarkovEigen(const int size, Eigen::MatrixXd mat) : kSize(size), marMat(mat), CleanFmt(4, 0, ", ", "\n", "[", "]") {
 }
 
 void MarkovEigen::initCouponCollector() {
-  for (double i = 0.0; i < N; i++)
-	for (double j = 0.0; j < N; j++)
-	  marMat(i, j) = (i == j ? (j + 1.0) / N : (i == (j + 1.0) ? (N - (j + 1.0)) / N : 0.0));
-
-  marMat(N - 1, N - 1) = 1.0;
-  marMat(0, N - 1) = 0.0;
+  for (double i = 0.0; i < kSize; i++)
+	for (double j = 0.0; j < kSize; j++)
+	  marMat(i, j) = (i == j ? (j + 1.0) / kSize : (i == (j + 1.0) ? (kSize - (j + 1.0)) / kSize : 0.0));
+  marMat(kSize - 1, kSize - 1) = 1.0;
+  marMat(0, kSize - 1) = 0.0;
 }
 //1  /(15^16) *(sum ((-1)^i) *C(15, i)(15-i)^16 , i=0 to 16) in Alpha for Sterling Number of Second Kind
 
 void MarkovEigen::initStreak(double T) {
-  for (int i = 0; i < N; i++)
-	for (int j = 0; j < N; j++)
+  for (int i = 0; i < kSize; i++)
+	for (int j = 0; j < kSize; j++)
 	  marMat(i, j) = (i == 0 ? 1.0 - T : (i == j + 1 ? T : 0.0));
-
-  marMat(N - 1, N - 1) = 1.0;
-  marMat(0, N - 1) = 0.0;
+  marMat(kSize - 1, kSize - 1) = 1.0;
+  marMat(0, kSize - 1) = 0.0;
 }
 
 void MarkovEigen::initStreak(double * T) {
 
-  for (int i = 0; i < N; i++)
-	for (int j = 0; j < N; j++)
+  for (int i = 0; i < kSize; i++)
+	for (int j = 0; j < kSize; j++)
 	  marMat(i, j) = (i == 0 ? 1 - T[j] : (i == j + 1 ? T[i - 1] : 0.0));
 
-  marMat(N - 1, N - 1) = 1.0;
-  marMat(0, N - 1) = 0.0;
+  marMat(kSize - 1, kSize - 1) = 1.0;
+  marMat(0, kSize - 1) = 0.0;
 }
 
 MarkovEigen MarkovEigen::operator^(unsigned long long int n) {

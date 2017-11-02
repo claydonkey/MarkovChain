@@ -30,19 +30,18 @@ protected:
 public:
   double * a;
   double T = 0.0;
-  int N = 0;
+  int kSize = 0;
   Eigen::MatrixXd marMat;
   Eigen::IOFormat CleanFmt;
   explicit MarkovEigen(const int size);
   explicit MarkovEigen(const int size, Eigen::MatrixXd mat);
   explicit MarkovEigen(const int size, double T);
-  ~MarkovEigen();
   void initStreak(double prob);
   void initStreak(double * prob);
   void initCouponCollector();
   MarkovEigen identity();
   MarkovEigen operator*(const MarkovEigen &b);
-  MarkovEigen operator^(unsigned long long int n);
+  MarkovEigen operator^(uint64_t n);
   //MarkovEigen operator^( float  n);
   /*
   friend ostream& operator<<(ostream& lhs, const MarkovEigen & rhs) {

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 anthony.
+ * Copyright 2017 Anthony Campbell.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-/*
- * File:   markovMx.cpp
- * Author: anthony
- *
- * Created on 28 April 2016, 09:30
+/**
+ * @author Anthony Campbell anthony@claydonkey.com
  */
 
-#include <cstdlib>
-#include "MarkovMx.h"
+#include "MarkovStats.h"
 
-using namespace std;
-namespace Markov {
-  template class MarkovMx<double>;
-  using mkMkd = MarkovMx<double>;
-}
+
+//1  /(15^16) *(sum ((-1)^i) *C(15, i)(15-i)^16 , i=0 to 16) in Alpha for Sterling Number of Second Kind
+
+ 

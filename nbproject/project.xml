@@ -16,7 +16,7 @@
                     <type>3</type>
                 </confElem>
                 <confElem>
-                    <name>x86_64-w64-mingw64</name>
+                    <name>x86_64-w64-mingw32_shared</name>
                     <type>2</type>
                 </confElem>
                 <confElem>
