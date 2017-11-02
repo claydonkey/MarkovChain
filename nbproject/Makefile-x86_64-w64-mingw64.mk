@@ -23,7 +23,7 @@ AS=nasm
 # Macros
 CND_PLATFORM=x86_64-w64-mingw32-Windows
 CND_DLIB_EXT=dll
-CND_CONF=Release
+CND_CONF=x86_64-w64-mingw64
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -53,8 +53,8 @@ TESTOBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-march=native
+CXXFLAGS=-march=native
 
 # Fortran Compiler Flags
 FFLAGS=

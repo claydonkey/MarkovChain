@@ -46,6 +46,7 @@
 
 # Environment
 MKDIR=mkdir
+INSTALL_DIR=data/local/tmp
 CP=cp
 CCADMIN=CCadmin
 JNI_INSTALL_DIR=D:\Users\anthony\Documents\Minnow\Source\Android\MarkovChains\libs\arm64-v8a
@@ -103,7 +104,11 @@ build-tests: .build-tests-post
 # Add your pre 'build-tests' code here...
 
 .build-tests-post: .build-tests-impl
-# Add your post 'build-tests' code here...
+	@echo $(CONF)
+ifeq ($(CONF), arch64-linux-android)
+	-adb push ${CND_ARTIFACT_PATH_aarch64-linux-android}   $(INSTALL_DIR)
+	-adb shell chmod 777 $(INSTALL_DIR)/${CND_ARTIFACT_NAME_aarch64-linux-android}
+endif
 
 
 # run tests

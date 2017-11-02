@@ -35,7 +35,7 @@
         </environment>
       </runprofile>
     </conf>
-    <conf name="Release" type="2">
+    <conf name="x86_64-w64-mingw64" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <platform>3</platform>

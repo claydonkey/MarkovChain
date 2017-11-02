@@ -14,14 +14,14 @@ CND_ARTIFACT_PATH_x86_64-w64-mingw32=dist/x86_64-w64-mingw32/x86_64-w64-mingw32-
 CND_PACKAGE_DIR_x86_64-w64-mingw32=dist/x86_64-w64-mingw32/x86_64-w64-mingw32-Windows/package
 CND_PACKAGE_NAME_x86_64-w64-mingw32=MarkovChain.tar
 CND_PACKAGE_PATH_x86_64-w64-mingw32=dist/x86_64-w64-mingw32/x86_64-w64-mingw32-Windows/package/MarkovChain.tar
-# Release configuration
-CND_PLATFORM_Release=x86_64-w64-mingw32-Windows
-CND_ARTIFACT_DIR_Release=dist/Release/x86_64-w64-mingw32-Windows
-CND_ARTIFACT_NAME_Release=libMarkovChain.dll
-CND_ARTIFACT_PATH_Release=dist/Release/x86_64-w64-mingw32-Windows/libMarkovChain.dll
-CND_PACKAGE_DIR_Release=dist/Release/x86_64-w64-mingw32-Windows/package
-CND_PACKAGE_NAME_Release=libMarkovChain.dll.tar
-CND_PACKAGE_PATH_Release=dist/Release/x86_64-w64-mingw32-Windows/package/libMarkovChain.dll.tar
+# x86_64-w64-mingw64 configuration
+CND_PLATFORM_x86_64-w64-mingw64=x86_64-w64-mingw32-Windows
+CND_ARTIFACT_DIR_x86_64-w64-mingw64=dist/x86_64-w64-mingw64/x86_64-w64-mingw32-Windows
+CND_ARTIFACT_NAME_x86_64-w64-mingw64=libMarkovChain.dll
+CND_ARTIFACT_PATH_x86_64-w64-mingw64=dist/x86_64-w64-mingw64/x86_64-w64-mingw32-Windows/libMarkovChain.dll
+CND_PACKAGE_DIR_x86_64-w64-mingw64=dist/x86_64-w64-mingw64/x86_64-w64-mingw32-Windows/package
+CND_PACKAGE_NAME_x86_64-w64-mingw64=libMarkovChain.dll.tar
+CND_PACKAGE_PATH_x86_64-w64-mingw64=dist/x86_64-w64-mingw64/x86_64-w64-mingw32-Windows/package/libMarkovChain.dll.tar
 # aarch64-linux-android configuration
 CND_PLATFORM_aarch64-linux-android=x86_64-w64-mingw32-Windows
 CND_ARTIFACT_DIR_aarch64-linux-android=dist/aarch64-linux-android/x86_64-w64-mingw32-Windows

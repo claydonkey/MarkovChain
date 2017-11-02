@@ -1,4 +1,4 @@
-    /*
+/*
  * The MIT License
  *
  * Copyright 2016 anthony.
@@ -37,58 +37,43 @@
 using namespace std;
 using namespace Eigen;
 
-MarkovEigen::MarkovEigen(const int size) : N(size), marMat(size, size), CleanFmt(4, 0, ", ", "\n", "[", "]") { // constructor with pre-defined array
-    //  a = marMat.data();
-    //    Map<MatrixXd>(a, size, size) = marMat;
+MarkovEigen::MarkovEigen(const int size) : N(size), marMat(size, size), CleanFmt(4, 0, ", ", "\n", "[", "]") {
 }
 
-MarkovEigen::MarkovEigen(const int size, Eigen::MatrixXd mat) : N(size), marMat(mat), CleanFmt(4, 0, ", ", "\n", "[", "]") { // constructor with pre-defined array
-    //   a = marMat.data();
-    //  Map<MatrixXd>(a, mat.rows(), mat.cols()) = marMat;
+MarkovEigen::MarkovEigen(const int size, Eigen::MatrixXd mat) : N(size), marMat(mat), CleanFmt(4, 0, ", ", "\n", "[", "]") {
 }
 
 void MarkovEigen::initCouponCollector() {
-    for (double i = 0.0; i < N; i++)
+  for (double i = 0.0; i < N; i++)
 	for (double j = 0.0; j < N; j++)
-	    marMat(i, j) = (i == j ? (j + 1.0) / N : (i == (j + 1.0) ? (N - (j + 1.0)) / N : 0.0));
+	  marMat(i, j) = (i == j ? (j + 1.0) / N : (i == (j + 1.0) ? (N - (j + 1.0)) / N : 0.0));
 
-    marMat(N - 1, N - 1) = 1.0;
-    marMat(0, N - 1) = 0.0;
+  marMat(N - 1, N - 1) = 1.0;
+  marMat(0, N - 1) = 0.0;
 }
+//1  /(15^16) *(sum ((-1)^i) *C(15, i)(15-i)^16 , i=0 to 16) in Alpha for Sterling Number of Second Kind
 
-void MarkovEigen::initStreak(double T) {  //1  /(15^16) *(sum ((-1)^i) *C(15, i)(15-i)^16 , i=0 to 16) in Alpha for Sterling Number of Second Kind
-    for (int i = 0; i < N; i++)
+void MarkovEigen::initStreak(double T) {
+  for (int i = 0; i < N; i++)
 	for (int j = 0; j < N; j++)
-	    marMat(i, j) = (i == 0 ? 1.0 - T : (i == j + 1 ? T : 0.0));
+	  marMat(i, j) = (i == 0 ? 1.0 - T : (i == j + 1 ? T : 0.0));
 
-    marMat(N - 1, N - 1) = 1.0;
-    marMat(0, N - 1) = 0.0;
-
+  marMat(N - 1, N - 1) = 1.0;
+  marMat(0, N - 1) = 0.0;
 }
 
 void MarkovEigen::initStreak(double * T) {
 
-    for (int i = 0; i < N; i++)
+  for (int i = 0; i < N; i++)
 	for (int j = 0; j < N; j++)
-	    marMat(i, j) = (i == 0 ? 1 - T[j] : (i == j + 1 ? T[i - 1] : 0.0));
+	  marMat(i, j) = (i == 0 ? 1 - T[j] : (i == j + 1 ? T[i - 1] : 0.0));
 
-    marMat(N - 1, N - 1) = 1.0;
-    marMat(0, N - 1) = 0.0;
-
+  marMat(N - 1, N - 1) = 1.0;
+  marMat(0, N - 1) = 0.0;
 }
 
 MarkovEigen MarkovEigen::operator^(unsigned long long int n) {
-
-    return MarkovEigen(n, marMat.pow(n));
+  return MarkovEigen(n, marMat.pow(n));
 }
 
-//MarkovEigen MarkovEigen::operator^( float  n) {
 
-   // return MarkovEigen(n, marMat.pow(n));
-//}
-
-
-MarkovEigen::~MarkovEigen() {
-
-    //delete[] a;
-}
