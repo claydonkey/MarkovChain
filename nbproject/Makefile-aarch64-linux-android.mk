@@ -45,10 +45,13 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
-	${TESTDIR}/TestFiles/f1
+	${TESTDIR}/TestFiles/f1 \
+	${TESTDIR}/TestFiles/f2
 
 # Test Object Files
 TESTOBJECTFILES= \
+	${TESTDIR}/MarkovTestSuite/MarkovTestRunner.o \
+	${TESTDIR}/MarkovTestSuite/MarkovTestSuite.o \
 	${TESTDIR}/tests/main.o
 
 # C Compiler Flags
@@ -108,11 +111,27 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/main.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS}   
 
+${TESTDIR}/TestFiles/f2: ${TESTDIR}/MarkovTestSuite/MarkovTestRunner.o ${TESTDIR}/MarkovTestSuite/MarkovTestSuite.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS}   `cppunit-config --libs`   
+
 
 ${TESTDIR}/tests/main.o: tests/main.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/android64/include/eigen3 -I. -std=c++14 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/main.o tests/main.cpp
+
+
+${TESTDIR}/MarkovTestSuite/MarkovTestRunner.o: MarkovTestSuite/MarkovTestRunner.cpp 
+	${MKDIR} -p ${TESTDIR}/MarkovTestSuite
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/android64/include/eigen3 -std=c++14 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/MarkovTestSuite/MarkovTestRunner.o MarkovTestSuite/MarkovTestRunner.cpp
+
+
+${TESTDIR}/MarkovTestSuite/MarkovTestSuite.o: MarkovTestSuite/MarkovTestSuite.cpp 
+	${MKDIR} -p ${TESTDIR}/MarkovTestSuite
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/android64/include/eigen3 -std=c++14 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/MarkovTestSuite/MarkovTestSuite.o MarkovTestSuite/MarkovTestSuite.cpp
 
 
 ${OBJECTDIR}/MarkovStats_nomain.o: ${OBJECTDIR}/MarkovStats.o MarkovStats.cpp 
@@ -172,6 +191,7 @@ ${OBJECTDIR}/markovMx_nomain.o: ${OBJECTDIR}/markovMx.o markovMx.cpp
 	@if [ "${TEST}" = "" ]; \
 	then  \
 	    ${TESTDIR}/TestFiles/f1 || true; \
+	    ${TESTDIR}/TestFiles/f2 || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi

@@ -74,8 +74,6 @@ int main(int argc, char** argv) {
 		  "Enter Problem to Solve:\n 1. Coupon Collector\n 2. Streaks\n";
   cin >> puz;
 
-
-
   switch (puz) {
 	case 2:
 	  cout <<
@@ -109,13 +107,13 @@ int main(int argc, char** argv) {
 	  mkv = new Markov::Coupon<double> (k1);
 	  cout << *mkv << endl;
 	  // cout << Timer([&]() {
-	  *mkv = *mkv ^ (n - 1);
+	  *mkv ^= (n - 1);
 	  // }) << std::endl;
 	  break;
 	case 2:
 	  mkv = new Markov::Streak<double> (k1, s);
 	  // cout << Timer([&]() {
-	  *mkv = *mkv ^ n;
+	  *mkv ^= n;
 	  //  }) << std::endl;
 	  break;
   }

@@ -65,6 +65,9 @@ namespace Markov {
 	}
 
 	explicit MarkovMx(const int n) : kSize(n), markov_matrix_(new T[kSize*kSize]) {
+	  for (int r = 0; r < kSize; r++)
+		for (int c = 0; c < kSize; c++)
+		  markov_matrix_[r * kSize + c] = (r == c ? 1 : 0);
 	}
 
 	MarkovMx(MarkovMx const &) = delete;
@@ -80,6 +83,48 @@ namespace Markov {
 	MarkovMx(MarkovMx &&rhs) : kSize(rhs.kSize), markov_matrix_(std::move(rhs.markov_matrix_)) {
 	}
 
+	void Identity() {
+	  for (int r = 0; r < this->kSize; r++)
+		for (int c = 0; c < this->kSize; c++)
+		  this->markov_matrix_[r * kSize + c] = (r == c ? 1 : 0);
+	}
+
+	/* todo with side effects*/
+	void Multi(const MarkovMx &b) {
+	  for (int r = 0; r < kSize; r++)
+		for (int c = 0; c < kSize; c++) {
+		  this->markov_matrix_[r * kSize + c] = 0;
+		  for (int k = 0; k < kSize; k++) {
+			T row = markov_matrix_[r * b.kSize + k];
+			T column = b.markov_matrix_[k * b.kSize + c];
+			this->markov_matrix_[r * kSize + c] += row *column;
+		  }
+		}
+	}
+
+	static const MarkovMx<T> & toIdentity(const MarkovMx<T> &rhs) {
+	  for (int r = 0; r < rhs.kSize; r++)
+		for (int c = 0; c < rhs.kSize; c++)
+		  rhs.markov_matrix_[r * rhs.kSize + c] = (r == c ? 1 : 0);
+	  return rhs;
+	}
+
+	/* todo with side effects*/
+	void Pow(uint64_t n) {
+	  if (n < 0)
+		throw "Negative exponent not implemented";
+	  const MarkovMx<T> & i = MarkovMx<T>(this->kSize);
+	  MarkovMx<T> &ref = *this;
+	  bool first = true;
+	  for (ref; n > 0; ref = ref * ref, n /= 2)
+		if (first) {
+		  Multi(i);
+		  first = false;
+		}
+		else if (n % 2 != 0)
+		  Multi(ref);
+	}
+
 	MarkovMx<T> identity() {
 	  MarkovMx m(this->kSize);
 	  for (int r = 0; r < this->kSize; r++)
@@ -88,30 +133,42 @@ namespace Markov {
 	  return m;
 	}
 
-	MarkovMx<T> operator*(const MarkovMx &b) {
+	inline MarkovMx<T> operator*(const MarkovMx &rhs) {
 	  MarkovMx d(kSize);
 	  for (int r = 0; r < kSize; r++)
 		for (int c = 0; c < kSize; c++) {
 		  d.markov_matrix_[r * kSize + c] = 0;
 		  for (int k = 0; k < kSize; k++) {
-
-			T row = markov_matrix_[r * b.kSize + k];
-			T column = b.markov_matrix_[k * b.kSize + c];
+			T row = markov_matrix_[r * rhs.kSize + k];
+			T column = rhs.markov_matrix_[k * rhs.kSize + c];
 			d.markov_matrix_[r * kSize + c] += row *column;
 		  }
 		}
 	  return d;
 	}
 
-	MarkovMx<T> operator^(uint64_t n) {
+	MarkovMx<T> & operator^=(uint64_t n) {
 	  if (n < 0)
 		throw "Negative exponent not implemented";
-	  MarkovMx<T> d = identity();
-	  MarkovMx<T> &sq = *this;
-	  for (sq; n > 0; sq = sq * sq, n /= 2)
+	  const uint64_t c = n;
+	  MarkovMx<T> i = this->identity();
+	  MarkovMx<T> &lhs = *this;
+	  for (lhs; n > 0; lhs = lhs * lhs, n /= 2)
 		if (n % 2 != 0)
-		  d = d * sq;
-	  return d;
+		  i = i * lhs;
+	  this->markov_matrix_ = std::move(i.markov_matrix_);
+	  return *this;
+	}
+
+	inline MarkovMx<T> operator^(uint64_t n) {
+	  if (n < 0)
+		throw "Negative exponent not implemented";
+	  MarkovMx<T> i = this->identity();
+	  MarkovMx<T> &lhs = *this;
+	  for (lhs; n > 0; lhs = lhs * lhs, n /= 2)
+		if (n % 2 != 0)
+		  i = i * lhs;
+	  return i;
 	}
 
 	friend ostream& operator<<(ostream& lhs, const MarkovMx<T> & rhs) {

@@ -44,18 +44,21 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
-	${TESTDIR}/TestFiles/f1
+	${TESTDIR}/TestFiles/markovchaincmd \
+	${TESTDIR}/TestFiles/markovtestsuite
 
 # Test Object Files
 TESTOBJECTFILES= \
+	${TESTDIR}/MarkovTestSuite/MarkovTestRunner.o \
+	${TESTDIR}/MarkovTestSuite/MarkovTestSuite.o \
 	${TESTDIR}/tests/main.o
 
 # C Compiler Flags
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-O3 -march=native
-CXXFLAGS=-O3 -march=native
+CCFLAGS=-O3 -march=native -mavx -mavx2
+CXXFLAGS=-O3 -march=native -mavx -mavx2
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -77,17 +80,17 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libMarkovChain.${CND_DLIB_EXT}: ${OBJ
 ${OBJECTDIR}/MarkovStats.o: MarkovStats.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MarkovStats.o MarkovStats.cpp
+	$(COMPILE.cc) -g -O -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MarkovStats.o MarkovStats.cpp
 
 ${OBJECTDIR}/markovEigen.o: markovEigen.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/markovEigen.o markovEigen.cpp
+	$(COMPILE.cc) -g -O -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/markovEigen.o markovEigen.cpp
 
 ${OBJECTDIR}/markovMx.o: markovMx.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/markovMx.o markovMx.cpp
+	$(COMPILE.cc) -g -O -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/markovMx.o markovMx.cpp
 
 # Subprojects
 .build-subprojects:
@@ -96,15 +99,31 @@ ${OBJECTDIR}/markovMx.o: markovMx.cpp
 .build-tests-conf: .build-tests-subprojects .build-conf ${TESTFILES}
 .build-tests-subprojects:
 
-${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/main.o ${OBJECTFILES:%.o=%_nomain.o}
+${TESTDIR}/TestFiles/markovchaincmd: ${TESTDIR}/tests/main.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS}   
+	${LINK.cc} -o ${TESTDIR}/TestFiles/markovchaincmd $^ ${LDLIBSOPTIONS}  -O3 -march=native -mavx 
+
+${TESTDIR}/TestFiles/markovtestsuite: ${TESTDIR}/MarkovTestSuite/MarkovTestRunner.o ${TESTDIR}/MarkovTestSuite/MarkovTestSuite.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/markovtestsuite $^ ${LDLIBSOPTIONS}   -lbenchmark -lm -lpthread -lgtest -lshlwapi 
 
 
 ${TESTDIR}/tests/main.o: tests/main.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -I. -std=c++14 -O3 -march=native -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/main.o tests/main.cpp
+	$(COMPILE.cc) -g -O -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -I. -std=c++14 -O3 -march=native -mavx -mavx2 -O3 -march=native -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/main.o tests/main.cpp
+
+
+${TESTDIR}/MarkovTestSuite/MarkovTestRunner.o: MarkovTestSuite/MarkovTestRunner.cpp 
+	${MKDIR} -p ${TESTDIR}/MarkovTestSuite
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -O -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14 -O3 -march=native -mavx -mavx2 -MMD -MP -MF "$@.d" -o ${TESTDIR}/MarkovTestSuite/MarkovTestRunner.o MarkovTestSuite/MarkovTestRunner.cpp
+
+
+${TESTDIR}/MarkovTestSuite/MarkovTestSuite.o: MarkovTestSuite/MarkovTestSuite.cpp 
+	${MKDIR} -p ${TESTDIR}/MarkovTestSuite
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -O -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14 -O3 -march=native -mavx -mavx2 -MMD -MP -MF "$@.d" -o ${TESTDIR}/MarkovTestSuite/MarkovTestSuite.o MarkovTestSuite/MarkovTestSuite.cpp
 
 
 ${OBJECTDIR}/MarkovStats_nomain.o: ${OBJECTDIR}/MarkovStats.o MarkovStats.cpp 
@@ -115,7 +134,7 @@ ${OBJECTDIR}/MarkovStats_nomain.o: ${OBJECTDIR}/MarkovStats.o MarkovStats.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MarkovStats_nomain.o MarkovStats.cpp;\
+	    $(COMPILE.cc) -g -O -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MarkovStats_nomain.o MarkovStats.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/MarkovStats.o ${OBJECTDIR}/MarkovStats_nomain.o;\
 	fi
@@ -128,7 +147,7 @@ ${OBJECTDIR}/markovEigen_nomain.o: ${OBJECTDIR}/markovEigen.o markovEigen.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/markovEigen_nomain.o markovEigen.cpp;\
+	    $(COMPILE.cc) -g -O -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/markovEigen_nomain.o markovEigen.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/markovEigen.o ${OBJECTDIR}/markovEigen_nomain.o;\
 	fi
@@ -141,7 +160,7 @@ ${OBJECTDIR}/markovMx_nomain.o: ${OBJECTDIR}/markovMx.o markovMx.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/markovMx_nomain.o markovMx.cpp;\
+	    $(COMPILE.cc) -g -O -I/C/MinGW/mingw64/include -I/C/MinGW/mingw64/include/Eigen -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/markovMx_nomain.o markovMx.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/markovMx.o ${OBJECTDIR}/markovMx_nomain.o;\
 	fi
@@ -150,7 +169,8 @@ ${OBJECTDIR}/markovMx_nomain.o: ${OBJECTDIR}/markovMx.o markovMx.cpp
 .test-conf:
 	@if [ "${TEST}" = "" ]; \
 	then  \
-	    ${TESTDIR}/TestFiles/f1 || true; \
+	    ${TESTDIR}/TestFiles/markovchaincmd || true; \
+	    ${TESTDIR}/TestFiles/markovtestsuite || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi

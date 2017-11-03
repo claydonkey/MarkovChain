@@ -31,6 +31,14 @@
                      kind="TEST">
         <itemPath>tests/main.cpp</itemPath>
       </logicalFolder>
+      <logicalFolder name="f2"
+                     displayName="MarkovTestSuite"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>MarkovTestSuite/MarkovTestRunner.cpp</itemPath>
+        <itemPath>MarkovTestSuite/MarkovTestSuite.cpp</itemPath>
+        <itemPath>MarkovTestSuite/MarkovTestSuite.h</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -77,6 +85,18 @@
       </item>
       <item path="MarkovStats.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="MarkovTestSuite/MarkovTestRunner.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="MarkovTestSuite/MarkovTestSuite.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="MarkovTestSuite/MarkovTestSuite.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="debug.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
@@ -92,6 +112,20 @@
         </ccTool>
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
         </linkerTool>
       </folder>
       <item path="markovEigen.cpp" ex="false" tool="1" flavor2="0">
@@ -112,13 +146,13 @@
           <developmentMode>5</developmentMode>
         </cTool>
         <ccTool>
-          <developmentMode>5</developmentMode>
+          <developmentMode>2</developmentMode>
           <standard>11</standard>
           <incDir>
             <pElem>C:/MinGW/mingw64/include</pElem>
             <pElem>C:/MinGW/mingw64/include/Eigen</pElem>
           </incDir>
-          <commandLine>-O3 -march=native</commandLine>
+          <commandLine>-O3 -march=native -mavx -mavx2</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -138,8 +172,25 @@
       </item>
       <item path="MarkovStats.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="MarkovTestSuite/MarkovTestRunner.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="MarkovTestSuite/MarkovTestSuite.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="MarkovTestSuite/MarkovTestSuite.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="debug.h" ex="false" tool="3" flavor2="0">
       </item>
+      <folder path="TestFiles">
+        <ccTool>
+          <commandLine>-O3 -march=native -mavx -mavx2</commandLine>
+        </ccTool>
+      </folder>
       <folder path="TestFiles/f1">
         <cTool>
           <incDir>
@@ -153,7 +204,23 @@
           <commandLine>-O3 -march=native</commandLine>
         </ccTool>
         <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
+          <output>${TESTDIR}/TestFiles/markovchaincmd</output>
+          <commandLine>-O3 -march=native -mavx</commandLine>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/markovtestsuite</output>
+          <linkerLibItems>
+            <linkerLibLibItem>benchmark</linkerLibLibItem>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+            <linkerLibLibItem>gtest</linkerLibLibItem>
+            <linkerLibLibItem>shlwapi</linkerLibLibItem>
+          </linkerLibItems>
         </linkerTool>
       </folder>
       <item path="markovEigen.cpp" ex="false" tool="1" flavor2="0">
@@ -199,6 +266,18 @@
       </item>
       <item path="MarkovStats.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="MarkovTestSuite/MarkovTestRunner.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="MarkovTestSuite/MarkovTestSuite.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="MarkovTestSuite/MarkovTestSuite.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="MkvJNI.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="debug.h" ex="false" tool="3" flavor2="0">
@@ -216,6 +295,20 @@
         </ccTool>
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
         </linkerTool>
       </folder>
       <item path="markovEigen.cpp" ex="false" tool="1" flavor2="0">
@@ -255,6 +348,18 @@
       </item>
       <item path="MarkovStats.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="MarkovTestSuite/MarkovTestRunner.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="MarkovTestSuite/MarkovTestSuite.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="MarkovTestSuite/MarkovTestSuite.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="debug.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
@@ -270,6 +375,20 @@
         </ccTool>
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
         </linkerTool>
       </folder>
       <item path="markovEigen.cpp" ex="false" tool="1" flavor2="0">
