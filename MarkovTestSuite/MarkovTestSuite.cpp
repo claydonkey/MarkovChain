@@ -51,7 +51,7 @@ void BM_markov_std_naive_coupon_dbl(benchmark::State& state) {
   }
 }
 
-void BM_markov_eigen_postfix_coupon_dbl(benchmark::State& state) {
+void BM_markov_std_postfix_coupon_dbl(benchmark::State& state) {
   while (state.KeepRunning()) {
 	Markov::Coupon<double>mkv(k1);
 	mkv ^= (n - 1);
@@ -76,7 +76,7 @@ void BM_markov_eigen_naive_coupon_dbl(benchmark::State& state) {
 
 #ifndef NOASSMBLR
 BENCHMARK(BM_markov_std_naive_coupon_dbl);
-BENCHMARK(BM_markov_eigen_postfix_coupon_dbl);
+BENCHMARK(BM_markov_std_postfix_coupon_dbl);
 //BENCHMARK(BM_markov_Pow_coupon_dbl);
 BENCHMARK(BM_markov_eigen_naive_coupon_dbl);
 #endif
