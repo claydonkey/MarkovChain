@@ -1,2 +1,8 @@
 /dist/
 /build/
+/MarkovChains/bin/
+/MarkovChains/gen/
+/MarkovChainAndroid/bin/
+/MarkovChainAndroid/gen/
+/MarkovChainAndroid/libs/arm64-v8a/libMarkovChain.so
+/MarkovChainAndroid/libs/guava-18.0.jar

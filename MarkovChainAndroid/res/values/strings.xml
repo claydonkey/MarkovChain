@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Streaks and Coupons</string>
+    <string name="Probabilty_hint">Probability of Single Occurrance</string>
+    <string name="ThrowCount_hint">Throw Count</string>
+    <string name="StreakCount_hint">Streak Count</string>
+</resources>

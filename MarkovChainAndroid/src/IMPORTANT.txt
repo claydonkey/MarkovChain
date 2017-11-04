@@ -1,0 +1,9 @@
+execute both from src
+
+
+javah -jni  -classpath
+"%ANDROID_SDK_HOME%/platforms/android-21/android.jar";D:\Users\anthony\Documents\Minnow\Source\Android\ndk\android-ndk-r8d\samples\hello-jni\bin\classes
+com.example.hellojni.HelloJni
+
+
+javac  -classpath "%ANDROID_SDK_HOME%/platforms/android-21/android.jar" com\example\hellojni\HelloJni.java
